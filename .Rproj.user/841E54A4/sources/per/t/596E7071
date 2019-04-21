@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1554421110854.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2577819053",
+    "id" : "596E7071",
+    "lastKnownWriteTime" : 1554423710,
+    "last_content_update" : 1554423710976,
+    "path" : "~/DataMining/analysis/anali.R",
+    "project_path" : "anali.R",
+    "properties" : {
+        "cursorPosition" : "152,0",
+        "scrollLine" : "151"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,241 @@
+
+rmvoutlier <- function(C){
+  x <- C
+  qnt <- quantile(x, probs=c(.25, .75), na.rm = T)
+  caps <- quantile(x, probs=c(.05, .95), na.rm = T)
+  H <- 1.5 * IQR(x, na.rm = T)
+  x[x < (qnt[1] - H)] <- caps[1] 
+  x[x > (qnt[2] + H)] <- caps[2] 
+  
+  return(x)
+}
+
+
+violinplotALL <-function(data){
+	library(ggplot2)
+  	library(scales)
+
+
+
+	plt_wool <- ggplot(subset(data, value > 0) , aes(x=variable,y=value)) + 
+    geom_violin(aes(fill = variable)) +stat_summary(fun.data="mean_sdl", geom="crossbar", width=0.002 ) +
+    scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x), labels = trans_format("log10", math_format(10^.x))) +
+    theme_gray() + theme(axis.text.x=element_text(face="plain", color="#000000", 
+                                                  size=10, angle=90, vjust=0.2), axis.text.y = element_text(size=12)) +
+    theme(axis.title=element_text(size=12,face="bold")) +
+    labs(x = "", y = "Horas") +
+    annotation_logticks(sides = "rl") +
+    theme(panel.grid.minor = element_blank()) +
+    guides(title.hjust=0.5) +
+    theme(plot.margin=unit(c(0,1,0,0),"mm"))
+  
+  	yp <- subset(data, value>0)             # Choosing only +ve values in col x
+  	sts <- boxplot.stats(yp$value)$stats  # Compute lower and upper whisker limits
+  
+  	p1 = plt_wool + coord_cartesian(ylim = c(sts[2]/200,max(sts)*70.05))
+  
+  	p1
+  	p1+geom_boxplot(width=0.05)
+
+}
+
+
+
+summarALL <- function() {
+	C1 <- summary(vimf)
+	C2 <- summary(PaceMakerf)
+	C3 <- summary(LibXMLf)
+	C4 <- summary(Lighttpdf)
+	C5 <- summary(Collectedf)
+	C6 <- summary(Syslogf)
+	C7 <- summary(ccachef)
+	C8 <- summary(gawkf)
+	C9 <- summary(Gzipf)
+	C10 <- summary(libnfcf)
+	C11 <- summary(Libsshf)
+	C12 <- summary(librskafkaf)
+	C13 <- summary(Mosquittof)
+	C14 <- summary(MPSolvef)
+	C15 <- summary(OpenVPNf)
+	C16 <- summary(Ossecf)
+	C17 <- summary(PianoBarf)
+	C18 <- summary(SilverSearchf)
+	C19 <- summary(GNUPlotf)
+	C20 <- summary(OpenSCf)
+	C21 <- summary(diaf)
+	C22 <- summary(uwsgif)
+	C23 <- summary(mapserverf)
+	C24 <- summary(Hexchatf)
+	C25 <- summary(ethersexf)
+	C26 <- summary(m4f)
+	C27 <- summary(totemf)
+	C28 <- summary(gnuchessf)
+	C29 <- summary(Curlf)
+	C30 <- summary(Sylpheedf)
+
+
+
+	# Definition of vectors
+	Sistema <- c("vim","PaceMaker","LibXML","Lighttpd","Collected","Syslog","ccache","gawk","Gzip","libnfc","Libssh","librskafka","Mosquitto","MPSolve","OpenVPN","Ossec","PianoBar","SilverSearch","GNUPlot","OpenSC","dia","uwsgi","mapserver","Hexchat","ethersex","m4","totem","gnuchess","Curl","Sylpheed")
+	Media <- c(C1[4],C2[4],C3[4],C4[4],C5[4],C6[4],C7[4],C8[4],C9[4],C10[4],C11[4],C12[4],C13[4],C14[4],C15[4],C16[4],C17[4],C18[4],C19[4],C20[4],C21[4],C22[4],C23[4],C24[4],C25[4],C26[4],C27[4],C28[4],C29[4],C30[4])
+	Mediana <- c(C1[3],C2[3],C3[3],C4[3],C5[3],C6[3],C7[3],C8[3],C9[3],C10[3],C11[3],C12[3],C13[3],C14[3],C15[3],C16[3],C17[3],C18[3],C19[3],C20[3],C21[3],C22[3],C23[3],C24[3],C25[3],C26[3],C27[3],C28[3],C29[3],C30[3]) 
+	Min <- c(C1[1],C2[1],C3[1],C4[1],C5[1],C6[1],C7[1],C8[1],C9[1],C10[1],C11[1],C12[1],C13[1],C14[1],C15[1],C16[1],C17[1],C18[1],C19[1],C20[1],C21[1],C22[1],C23[1],C24[1],C25[1],C26[1],C27[1],C28[1],C29[1],C30[1]) 
+	Max <- c(C1[6],C2[6],C3[6],C4[6],C5[6],C6[6],C7[6],C8[6],C9[6],C10[6],C11[6],C12[6],C13[6],C14[6],C15[6],C16[6],C17[6],C18[6],C19[6],C20[6],C21[6],C22[6],C23[6],C24[6],C25[6],C26[6],C27[6],C28[6],C29[6],C30[6]) 
+	Desvio <- c(sd(C1),sd(C2),sd(C3),sd(C4),sd(C5),sd(C6),sd(C7),sd(C8),sd(C9),sd(C10),sd(C11),sd(C12),sd(C13),sd(C14),sd(C15),sd(C16),sd(C17),sd(C18),sd(C19),sd(C20),sd(C21),sd(C22),sd(C23),sd(C24),sd(C25),sd(C26),sd(C27),sd(C28),sd(C29),sd(C30))
+
+	# Create a data frame from the vectors
+	impactPoints_df <- data.frame(Sistema, Media, Mediana, Min, Max, Desvio)
+	print(impactPoints_df)
+	write.csv(impactPoints_df, file = "SUMMARY_Changes_Imterval.csv",row.names=FALSE)
+
+}
+
+
+gendercivil <-  function(dat){
+	nm <- c()
+	separated <- c()
+	divorced <- c()
+
+	wind <- c()
+	msa <- c()
+	mcs <- c()
+	sep <- c()
+
+	for (i in 1:length(dataset$sex)){
+    	if(dataset$sex[i] == "Female"){
+    		print(dataset$maritalstatus[i])
+    		if(dataset$maritalstatus[i] == "Divorced"){
+    			divorced <- c(divorced, dataset$maritalstatus[i])
+    		}
+    		if(dataset$maritalstatus[i] == "Never-married"){
+    			nm <- c(nm, dataset$maritalstatus[i])
+    		}
+
+    		if(dataset$maritalstatus[i] == "Widowed"){
+    			wind <- c(wind, dataset$maritalstatus[i])
+    		}
+    		if(dataset$maritalstatus[i] == "Married-spouse-absent"){
+    			msa <- c(msa, dataset$maritalstatus[i])
+    		}
+
+    		if(dataset$maritalstatus[i] == "Married-civ-spouse"){
+    			mcs <- c(mcs, dataset$maritalstatus[i])
+    		}
+
+    		if(dataset$maritalstatus[i] == "Separated"){
+    			sep <- c(sep, dataset$maritalstatus[i])
+    		}
+    	}
+	}
+
+	length(nm)
+	length(separated)
+	length(divorced)
+	length(wind)
+	length(msa)
+	length(mcs)
+	length(sep)	
+
+
+	status <- c("nm", "separated", "divorced", "wind", "msa", "mcs", "sep")
+	values <- c(length(nm),	length(separated),	length(divorced),	length(wind),	length(msa),	length(mcs),	length(sep))
+	# Create a data frame from the vectors
+	Female_df <- data.frame(status, values)
+	print(Female_df)
+	
+
+
+}
+
+
+
+
+
+class50 <-  function(dat){
+	profM <- c()
+	
+
+	for (i in 1:length(dataset$class)){
+    	if(dataset$class[i] == ">50K"){
+    		profM <- c(profM, dataset$ocupation[i])
+    		
+    		
+    	}
+	}
+
+	length(profM)
+
+
+}
+
+rq4 <-  function(dat){
+	Husband <- c()
+	Notinfamily <- c()
+	Otherrelative <- c()
+	Ownchild <- c()
+	Unmarried <- c()
+	Wife <- c()
+	
+
+	for (i in 1:length(dataset$relationship)){
+    	if(dataset$relationship[i] == "Husband"){
+    		Husband <- c(Husband, dataset$hoursperweek[i])
+    	}
+    	if(dataset$relationship[i] == "Not-in-family"){
+    		Notinfamily <- c(Notinfamily, dataset$hoursperweek[i])
+    	}
+    	if(dataset$relationship[i] == "Other-relative"){
+    		Otherrelative <- c(Otherrelative, dataset$hoursperweek[i])
+    	}
+    	if(dataset$relationship[i] == "Own-child"){
+    		Ownchild <- c(Ownchild, dataset$hoursperweek[i])
+    	}
+    	if(dataset$relationship[i] == "Unmarried"){
+    		Unmarried <- c(Unmarried, dataset$hoursperweek[i])
+    	}
+    	if(dataset$relationship[i] == "Wife"){
+    		Wife <- c(Wife, dataset$hoursperweek[i])
+    	}
+	}
+
+
+	Husbandv <- data.frame(value=rmvoutlier(Husband), variable ="Husband")
+	Notinfamilyv <- data.frame(value=rmvoutlier(Notinfamily), variable ="Not in Family")
+	Otherrelativev <- data.frame(value=rmvoutlier(Otherrelative), variable ="Other relative")
+	Ownchildv <- data.frame(value=rmvoutlier(Ownchild), variable ="Own child")
+	Unmarriedv <- data.frame(value=rmvoutlier(Unmarried), variable ="Unmarried")
+	Wifev <- data.frame(value=rmvoutlier(Wife), variable ="Wife")
+
+	datarq4 <- rbind(Husbandv, Notinfamilyv, Otherrelativev, Ownchildv, Unmarriedv, Wifev)
+
+
+}
+
+
+rmvoutlier <- function(C){
+  x <- C
+  qnt <- quantile(x, probs=c(.25, .75), na.rm = T)
+  caps <- quantile(x, probs=c(.05, .95), na.rm = T)
+  H <- 1.5 * IQR(x, na.rm = T)
+  x[x < (qnt[1] - H)] <- caps[1] 
+  x[x > (qnt[2] + H)] <- caps[2] 
+  
+  return(x)
+}
+
+
+p <- ggplot(data=Female_df, aes(x=status, y=values)) +
+    geom_bar(stat="identity", fill="steelblue")+
+    geom_text(aes(label=values), vjust=-0.3, color="black", size=3.5)+
+    theme_minimal()
+
+    p + theme(axis.text.x = element_text(face="bold", 
+                                     size=11, angle=25),
+          axis.text.y = element_text(face="bold", 
+                                     size=12))
+
+
+
+
+
+
